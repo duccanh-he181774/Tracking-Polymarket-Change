@@ -47,7 +47,7 @@ source .venv/bin/activate
 ### 3. Cai dat thu vien
 
 ```bash
-pip install requests websocket-client
+pip install -r requirements.txt
 ```
 
 ### 4. Cau hinh
