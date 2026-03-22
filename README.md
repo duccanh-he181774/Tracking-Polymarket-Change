@@ -1,38 +1,38 @@
 # Polymarket Market Tracker Bot
 
-Bot theo doi bien dong gia cua cac market tren Polymarket va gui thong bao khi phat hien thay doi lon.
+Bot theo dõi biến động giá của các market trên Polymarket và gửi thông báo khi phát hiện thay đổi lớn.
 
-## Tinh nang
+## Tính năng
 
-- Theo doi cac market theo category (breaking, crypto, politics, etc.)
-- Ho tro theo doi den 500 markets dong thoi
-- Fast polling mode - kiem tra moi 10 giay
-- Phat hien bien dong gia >= nguong cau hinh (mac dinh 10%)
-- Thong bao qua Console, Telegram, Discord
-- Luu lich su gia de theo doi lien tuc
-- Ho tro proxy (HTTP/HTTPS)
-- Loc theo volume toi thieu
-- Pinned message monitor - ghim tin nhan high-rate markets tren Telegram
-- Che do WebSocket (real-time) va Polling
+- Theo dõi các market theo category (breaking, crypto, politics, etc.)
+- Hỗ trợ theo dõi đến 500 markets đồng thời
+- Fast polling mode - kiểm tra mỗi 10 giây
+- Phát hiện biến động giá >= ngưỡng cấu hình (mặc định 10%)
+- Thông báo qua Console, Telegram, Discord
+- Lưu lịch sử giá để theo dõi liên tục
+- Hỗ trợ proxy (HTTP/HTTPS)
+- Lọc theo volume tối thiểu
+- Pinned message monitor - ghim tin nhắn high-rate markets trên Telegram
+- Chế độ WebSocket (real-time) và Polling
 
-## Cau truc file
+## Cấu trúc file
 
 ```
-bot.py                 # Entry point - chay bot
-config.py              # Cau hinh (API, Telegram, proxy, etc.)
-market_tracker.py      # Polling tracker - kiem tra gia theo interval
-websocket_tracker.py   # WebSocket tracker - nhan gia real-time
-notifier.py            # Gui thong bao (Console, Telegram, Discord)
-generate_api_key.py    # Tao API key cho Polymarket CLOB
+bot.py                 # Điểm khởi chạy bot
+config.py              # Cấu hình (API, Telegram, proxy, etc.)
+market_tracker.py      # Polling tracker - kiểm tra giá theo interval
+websocket_tracker.py   # WebSocket tracker - nhận giá real-time
+notifier.py            # Gửi thông báo (Console, Telegram, Discord)
+generate_api_key.py    # Tạo API key cho Polymarket CLOB
 ```
 
-## Setup
+## Hướng dẫn cài đặt
 
-### 1. Cai dat Python
+### 1. Cài đặt Python
 
-Can Python 3.10+ . Tai tu https://www.python.org/downloads/
+Cần Python 3.10+. Tải từ https://www.python.org/downloads/
 
-### 2. Tao virtual environment (khuyen nghi)
+### 2. Tạo virtual environment (khuyến nghị)
 
 ```bash
 python -m venv .venv
@@ -44,45 +44,51 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Cai dat thu vien
+### 3. Cài đặt thư viện
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Cau hinh
+### 4. Cấu hình
 
-Mo file `config.py` va chinh sua:
+Sao chép file mẫu và chỉnh sửa:
+
+```bash
+cp config.sample.py config.py
+```
+
+Mở file `config.py` và chỉnh sửa:
 
 #### API & Market
 ```python
-CATEGORY = "breaking"           # Category can theo doi
-CHECK_INTERVAL = 10             # Kiem tra moi 10 giay
-PRICE_CHANGE_THRESHOLD = 0.1    # Nguong 10% (0.1 = 10 percentage points)
-MIN_VOLUME = 100000             # Volume toi thieu (USD)
-MAX_MARKETS_TO_TRACK = 500      # Toi da 500 markets
+CATEGORY = "breaking"           # Category cần theo dõi
+CHECK_INTERVAL = 10             # Kiểm tra mỗi 10 giây
+PRICE_CHANGE_THRESHOLD = 0.1    # Ngưỡng 10% (0.1 = 10 percentage points)
+MIN_VOLUME = 100000             # Volume tối thiểu (USD)
+MAX_MARKETS_TO_TRACK = 500      # Tối đa 500 markets
 ```
 
-#### Telegram (tuy chon)
+#### Telegram (tuỳ chọn)
 ```python
 ENABLE_TELEGRAM_NOTIFICATION = True
 TELEGRAM_BOT_TOKEN = "your_bot_token"
 TELEGRAM_CHAT_ID = "your_chat_id"
 ```
 
-De tao Telegram bot:
-1. Chat voi @BotFather tren Telegram
-2. Gui `/newbot` va lam theo huong dan de lay token
-3. Them bot vao group hoac chat truc tiep voi bot
-4. Lay chat_id tu: `https://api.telegram.org/bot<TOKEN>/getUpdates`
+Để tạo Telegram bot:
+1. Chat với @BotFather trên Telegram
+2. Gửi `/newbot` và làm theo hướng dẫn để lấy token
+3. Thêm bot vào group hoặc chat trực tiếp với bot
+4. Lấy chat_id từ: `https://api.telegram.org/bot<TOKEN>/getUpdates`
 
-#### Discord (tuy chon)
+#### Discord (tuỳ chọn)
 ```python
 ENABLE_DISCORD_NOTIFICATION = True
 DISCORD_WEBHOOK_URL = "your_webhook_url"
 ```
 
-#### Proxy (neu can)
+#### Proxy (nếu cần)
 ```python
 USE_PROXY = True
 PROXY_URL = "http://username:password@ip:port"
@@ -90,26 +96,26 @@ PROXY_URL = "http://username:password@ip:port"
 
 #### Pinned Message Monitor
 ```python
-ENABLE_PINNED_MONITOR = True        # Bat/tat pinned message
-HIGH_RATE_THRESHOLD_MIN = 0.7       # Hien thi market >= 70%
-HIGH_RATE_THRESHOLD_MAX = 0.9       # Hien thi market < 90%
-PINNED_MESSAGE_UPDATE_INTERVAL = 30 # Cap nhat moi 30 giay
+ENABLE_PINNED_MONITOR = True        # Bật/tắt pinned message
+HIGH_RATE_THRESHOLD_MIN = 0.7       # Hiển thị market >= 70%
+HIGH_RATE_THRESHOLD_MAX = 0.9       # Hiển thị market < 90%
+PINNED_MESSAGE_UPDATE_INTERVAL = 30 # Cập nhật mỗi 30 giây
 ```
 
-#### Che do WebSocket
+#### Chế độ WebSocket
 ```python
 USE_WEBSOCKET = False   # True = WebSocket real-time, False = Polling
 ```
 
-### 5. Chay bot
+### 5. Chạy bot
 
 ```bash
 python bot.py
 ```
 
-Nhan `Ctrl+C` de dung bot.
+Nhấn `Ctrl+C` để dừng bot.
 
-## Vi du thong bao
+## Ví dụ thông báo
 
 ```
 📈 POLYMARKET ALERT 📈
@@ -125,29 +131,29 @@ Link: https://polymarket.com/event/bitcoin-100k-march-2026
 Time: 2026-03-02 14:30:45
 ```
 
-## Cac category pho bien
+## Các category phổ biến
 
-- `breaking` - Tin nong
-- `crypto` - Cryptocurrency
-- `politics` - Chinh tri
-- `sports` - The thao
+- `breaking` - Tin nóng
+- `crypto` - Tiền mã hoá
+- `politics` - Chính trị
+- `sports` - Thể thao
 - `business` - Kinh doanh
-- `science` - Khoa hoc
-- `pop-culture` - Van hoa
+- `science` - Khoa học
+- `pop-culture` - Văn hoá
 
-## Troubleshooting
+## Xử lý sự cố
 
-**Bot khong ket noi duoc:**
-- Kiem tra proxy co hoat dong khong
-- Kiem tra ket noi internet
-- Thu tat proxy (`USE_PROXY = False`)
+**Bot không kết nối được:**
+- Kiểm tra proxy có hoạt động không
+- Kiểm tra kết nối internet
+- Thử tắt proxy (`USE_PROXY = False`)
 
-**Khong nhan duoc thong bao:**
-- Kiem tra `ENABLE_TELEGRAM_NOTIFICATION = True`
-- Kiem tra threshold co phu hop khong (giam `PRICE_CHANGE_THRESHOLD`)
-- Kiem tra `MIN_VOLUME` co qua cao khong
+**Không nhận được thông báo:**
+- Kiểm tra `ENABLE_TELEGRAM_NOTIFICATION = True`
+- Kiểm tra ngưỡng có phù hợp không (giảm `PRICE_CHANGE_THRESHOLD`)
+- Kiểm tra `MIN_VOLUME` có quá cao không
 
-**Qua nhieu thong bao:**
-- Tang `PRICE_CHANGE_THRESHOLD` (vi du: 0.3 = 30%)
-- Tang `CHECK_INTERVAL` (vi du: 60 giay)
-- Tang `MIN_VOLUME` de loc market nho
+**Quá nhiều thông báo:**
+- Tăng `PRICE_CHANGE_THRESHOLD` (ví dụ: 0.3 = 30%)
+- Tăng `CHECK_INTERVAL` (ví dụ: 60 giây)
+- Tăng `MIN_VOLUME` để lọc market nhỏ
