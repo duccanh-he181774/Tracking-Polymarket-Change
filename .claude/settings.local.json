@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(md|txt\\)$\")",
+      "Bash(grep -E \"\\\\.\\(py|spec|txt|json|md|bat\\)$\")",
+      "Bash(find 'd:\\\\Bot Polymarket' -not -path */.venv/* -not -path */__pycache__/* -not -path */build/* -not -path */dist/* -type d -maxdepth 2)"
+    ]
+  }
+}
